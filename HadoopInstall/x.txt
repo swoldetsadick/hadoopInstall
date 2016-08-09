@@ -1,0 +1,85 @@
+
+sudo su hduser
+cd /usr/local/hadoop/etc/hadoop
+sudo nano core-site.xml
+
+<property>
+  <name>fs.default.name</name>
+  <value>hdfs://HadoopMaster:9000</value>
+</property>
+
+sudo nano hdfs-site.xml
+<property>
+  <name>dfs.replication</name>
+  <value>3</value>
+</property>
+
+sudo nano yarn-site.xml
+<property>
+	<name>yarn.resourcemanager.resource-tracker.address</name>
+	<value>HadoopMaster:8025</value>
+</property>
+<property>
+	<name>yarn.resourcemanager.scheduler.address</name>
+	<value>HadoopMaster:8035</value>
+</property>
+<property>
+	<name>yarn.resourcemanager.address</name>
+	<value>HadoopMaster:8050</value>
+</property>
+
+sudo nano mapred-site.xml
+
+<property>
+	<name>mapreduce.job.tracker</name>
+	<value>HadoopMaster:5431</value>
+</property>
+<property>
+	<name>mapred.framework.name</name>
+	<value>yarn</value>
+</property>
+
+
+sudo nano masters
+HadoopMaster
+
+sudo nano slaves
+HadoopSlave1
+HadoopSlave2
+HadoopSlave3
+HadoopSlave4
+
+cd ~
+
+# In HadoopSlave1 machine say yes and password for each dont forget file hadoop and ownership
+sudo rsync -avxP /usr/local/hadoop/ hduser@HadoopSlave1:/usr/local/hadoop/
+sudo rsync -avxP /usr/local/hadoop/ hduser@HadoopSlave2:/usr/local/hadoop/
+sudo rsync -avxP /usr/local/hadoop/ hduser@HadoopSlave3:/usr/local/hadoop/
+sudo rsync -avxP /usr/local/hadoop/ hduser@HadoopSlave4:/usr/local/hadoop/
+
+#Only master nodes
+sudo rm -rf /usr/local/hadoop_tmp/
+sudo mkdir -p /usr/local/hadoop_tmp/
+sudo mkdir -p /usr/local/hadoop_tmp/hdfs/namenode
+sudo chown hduser:hadoop -R /usr/local/hadoop_tmp/
+
+#Only slave nodes
+sudo mkdir -p /usr/local/hadoop_tmp/
+sudo mkdir -p /usr/local/hadoop_tmp/hdfs/datanode
+sudo chown hduser:hadoop -R /usr/local/hadoop_tmp/ 
+
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub hduser@HadoopSlave1
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub hduser@HadoopSlave2
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub hduser@HadoopSlave3
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub hduser@HadoopSlave4
+
+cd /usr/local/hadoop
+hdfs namenode -format
+
+hduser@HadoopMaster:/usr/local/hadoop$ start-dfs.sh
+hduser@HadoopMaster:/usr/local/hadoop$ start-yarn.sh
+hduser@HadoopMaster: jps
+hduser@HadoopSlave1: jps
+
+http://HadoopMaster:8088
+http://HadoopMaster:50070

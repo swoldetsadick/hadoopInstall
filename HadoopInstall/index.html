@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+  <html lang="en-US">
+    <head>
+
+      <!-- Internet site metas -->
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta property="og:title" content="Hadoop - Multi Node Cluster">
+      <meta name="description" content="How to install Hadoop - Multi Node Cluster">
+      <meta property="og:description" content="How to install Hadoop - Multi Node Cluster">
+      <link rel="canonical" href="https://swoldetsadick.github.io/hadoopInstall/">
+      <meta property="og:url" content="https://swoldetsadick.github.io/hadoopInstall/">
+      <meta property="og:site_name" content="Hadoop - Multi Node Cluster">
+
+      <!-- Site CSSs -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900">
+      <link rel="stylesheet" href="./css/screen.css">
+      <link rel="stylesheet" href="./css/styles.css">
+      <link rel="icon" type="image/x-icon" href="https://github.com/swoldetsadick/DM22/raw/master/favicon.gif">
+
+      <!-- Title -->
+      <title> Hadoop - Multi Node Cluster </title>
+      
+      <!-- Scripts -->
+      <script type="application/ld+json">
+        {
+          "@context": "http://schema.org",
+          "@type": "WebSite",
+          "name": "Hadoop - Multi Node Cluster",
+          "headline": "Hadoop - Multi Node Cluster",
+          "description": "How to install Hadoop - Multi Node Cluster",
+          "logo": "http://hadoop.apache.org/images/hadoop-logo.jpg",
+          "url": "http://hadoop.apache.org/"
+        }
+      </script>
+
+    </head>
+
+
+    <body class="wrap">
+      <header>
+        <div class="grid">
+          <div class="unit one-third center-on-mobiles">
+            <img src="./images/hadoop-logo.gif" width="249" height="115" alt="Hadoop Logo">
+          </div>
+        </div>
+      </header>
+
+
+      <section class="intro">
+        <div class="grid">
+          <div class="unit whole center-on-mobiles">
+            <p class="first">How to install Hadoop - Multi Node Cluster.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="free-hosting">
+        <div class="grid">
+          <div class="unit whole">
+            <div class="grid pane">
+              <div class="unit whole center-on-mobiles">
+                <br>
+
+                <h2 class="center-on-mobiles"><strong> Hadoop Install in a Simple Series of Commands </strong></h2>
+
+                <p>
+                  <strong> Step 1 - Prepare your Computer Network </strong> 
+                  <br>
+                  &ensp; &ensp; &ensp; First, you should decide of the number of nodes in the cluster to set up. In the following example, the cluster has 4 Datanodes and 1 Namenode. <br>
+                  Proceed with a fresh new install of 'Ubuntu Desktop' on each machine and give names to them. This example uses <a href="http://releases.ubuntu.com/16.04/"> Ubuntu 16.04 'Xenia Xerus' </a> distribution and 5 <a href="http://www.dell.com/us/dfb/p/optiplex-760/pd"> 'OptiPlex 760' </a> PC machines named HadoopMaster, HadoopSlave1, HadoopSlave2, HadoopSlave3, HadoopSlave4 and a common username, 'swl' with a password. Please take a paper and a pen and make a list of machine names and IP address separated by a tab. For this example it is as follows: <br>
+                  200.300.400.01    HadoopMaster <br>
+                  200.300.400.02    HadoopSlave1 <br>
+                  200.300.400.03    HadoopSlave2 <br>
+                  200.300.400.04    HadoopSlave3 <br>
+                  200.300.400.05    HadoopSlave4 <br>
+                  You can do it by running the following command on each machine:
+                  <blockquote>hduser@HadoopMaster:~$ ifconfig</blockquote>
+                  The output should look like this:<br><br>
+                  <img src="https://github.com/swoldetsadick/hadoopInstall/raw/gh-pages/images/ifconfig.PNG" id = "pica" alt="Cannot Display Image"> 
+                  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                </p>
+
+                <p>
+                  <strong> Step 2 - Install for each Machine </strong> 
+                  <br>
+                  All the commands in Step 2 are to be run on all machine.
+                  <br>
+                  &ensp; &ensp; &ensp; <i> 2.1 - Installing and Configuring Oracle’s Java 8 </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Hadoop is a java framework and need it to run. Hadoop supports all java version from 1.5 on but 1.8 is the latest stable version to date.
+                  Open the terminal for each Ubuntu machine, and install <a href="https://www.oracle.com/java/index.html"> Oracle's Java 8 </a> using the following commands:<br>
+                  <blockquote>
+                  swl@HadoopMaster:~$ sudo add-apt-repository ppa:webupd8team/java<br>
+                  swl@HadoopMaster:~$ sudo apt-get update <br>
+                  swl@HadoopMaster:~$ sudo apt-get install oracle-java8-installer<br>
+                  </blockquote>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; These commands will install source in your machine at <span style="background:#FF0000"> /usr/lib/jvm/java-8-oracle</span>. You can verify your java installation using the following command: <br>
+                  <blockquote>
+                  swl@HadoopMaster:~$ java -version <br>
+                  </blockquote>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; You should get something like the following output on each machine:<br><br>
+                  <img src="https://github.com/swoldetsadick/hadoopInstall/raw/gh-pages/images/javaOut.PNG" id = "pica" alt="Cannot Display Image"> 
+                  <br>
+                  <br>
+                  <br>
+                  &ensp; &ensp; &ensp; <i> 2.2 - Creating a Hadoop Group and User </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Now let's create a system group and a separate hadoop user. The system group will be named 'hadoop' and the user is named 'hduser', then we will add this user to sudoer list. Then reboot machines.
+                  <blockquote>
+                  swl@HadoopMaster:~$ sudo addgroup hadoop <br>
+                  swl@HadoopMaster:~$ sudo adduser --ingroup hadoop hduser <br>
+                  swl@HadoopMaster:~$ sudo adduser hduser sudo <br>
+                  swl@HadoopMaster:~$ sudo reboot <br>
+                  </blockquote> <br>
+                  &ensp; &ensp; &ensp; <i> 2.3 - Installing and Configuring SSH </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; SSH ("Secure Shell") is a protocol for securely accessing one machine from another (Linux Machines). Hadoop uses SSH for accessing slave nodes from the master node, to start and manage all HDFS and MapReduce daemons. First we login as the newly created 'hduser' then change to the user's home directory then install and configure SSH.
+                  <blockquote>
+                  swl@HadoopMaster:~$ sudo su hduser <br>
+                  hduser@HadoopMaster:/home/swl$ cd ~ <br>
+                  hduser@HadoopMaster:~$ sudo apt-get install openssh-server <br>
+                  hduser@HadoopMaster:~$ ssh-keygen -t rsa -P "" <br>
+                  hduser@HadoopMaster:~$ cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys <br>
+                  </blockquote> <br>
+                  The first command logs you as hduser. You might be prompted to give password. Enter the password given at the creation of the 'hduser' user. The second changes current directory to home directory of user 'hduser'. The third command install ssh and the fourth generates a ssh key for the 'hduser' user account. In this step you might be prompted for a password. Leave it blank. An id_rsa.pub is created with the following type of output:
+                  <br><br>
+                  <img src="https://github.com/swoldetsadick/hadoopInstall/raw/gh-pages/images/sshKey.PNG" id = "pica" alt="Cannot Display Image"> 
+                  <br><br><br><br><br><br><br><br><br><br><br><br>
+                  The fifth command copies the id_rsa.pub generated to the authorized keys dir of 'hduser' user.
+                  <br><br>
+                  &ensp; &ensp; &ensp; <i> 2.4 - Installing rsync </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Installing <b> rsync </b> permits the machines to share Hadoop source between all machines.
+                  <blockquote>
+                  hduser@HadoopMaster:~$ sudo apt-get install rsync
+                  </blockquote><br>
+                  &ensp; &ensp; &ensp; <i> 2.5 - Disabling IPv6 </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; IPv6 protocol for networking is installed by default but is a hamper for Hadoop. We should downgrade to IPv4. Run the command below to edit the sysctl.conf file. 
+                  <blockquote>
+                  hduser@HadoopMaster:~$ sudo nano /etc/sysctl.conf
+                  </blockquote>
+                  <br>
+                  The editable file will open in the command line (CLI). Go to the end of the document to copy and paste the next three lines:
+                  <blockquote>
+                  net.ipv6.conf.all.disable_ipv6 = 1 <br>
+                  net.ipv6.conf.default.disable_ipv6 = 1 <br>
+                  net.ipv6.conf.lo.disable_ipv6 = 1 <br>
+                  </blockquote>
+                  Please press crtl-x, then y, then enter keys. You have re-written the file and disabled IPv6.
+                  <br><br>
+                  &ensp; &ensp; &ensp; <i> 2.6 - The Environment Variables </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Run the following command will open the .bashrc file to edit in the CLI.
+                  <blockquote>
+                  hduser@HadoopMaster:~$ sudo nano .bashrc
+                  </blockquote>
+                  Go to the end of the document then add the following lines (you can copy paste):
+                  <blockquote>
+                  export JAVA_HOME=/usr/lib/jvm/java-8-oracle<br>
+                  export HADOOP_HOME=/usr/local/hadoop<br>
+                  export PATH=$PATH:$HADOOP_HOME/bin<br>
+                  export PATH=$PATH:$HADOOP_HOME/sbin<br>
+                  export HADOOP_MAPRED_HOME=$HADOOP_HOME<br>
+                  export HADOOP_COMMON_HOME=$HADOOP_HOME<br>
+                  export HADOOP_HDFS_HOME=$HADOOP_HOME<br>
+                  export YARN_HOME=$HADOOP_HOME<br>
+                  export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native<br>
+                  export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"<br>
+                  </blockquote>
+                  Then press crtl-x, then y, then enter. You have re-written the file and added the environment variables.
+                  <br><br>
+                  &ensp; &ensp; &ensp; <i> 2.7 - The Network </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Prepare now the computer network, and make sure all your machines are plugged-in to the internet. First run the following command:
+                  <blockquote>
+                  hduser@HadoopMaster:~$ sudo nano /etc/hosts
+                  </blockquote>
+                  An editable file opens within the CLI (command Line Interface) go to the end of the document then add the list above of machine names and IP address you made at the begining. Then press crtl-x, then y, then enter. You have re-written the file and add all machine to each other trusted hosts so they can communicate in a secure manner. Now reboot all machines using the following command:
+                  <blockquote>
+                  hduser@HadoopMaster:~$ sudo reboot <br>
+                  </blockquote>
+
+                  &ensp; &ensp; &ensp; <i> 2.8 - Create Hadoop File </i>
+                  <br>
+                  &ensp; &ensp; &ensp; &ensp; &ensp; &ensp; Now prepare a hadoop file in /usr/local directory to receive data and assign ownership of the directory to user 'hduser' by typing the following command.
+                  <blockquote>
+                  swl@HadoopMaster:~$ cd /usr/local<br>
+                  swl@HadoopMaster:/usr/local$ sudo mkdir  hadoop<br>
+                  swl@HadoopMaster:/usr/local$ sudo chown hduser:hadoop -R /usr/local/hadoop<br>
+                  </blockquote>
+                </p>
+
+                <p>
+                  <strong> Step 3 - Hadoop Configuration </strong> 
+                  <br>
+                  &ensp; &ensp; &ensp; The commands in Step 3 are to be run exclusively on the HadoopMaster only. This machine will be used as our cluster's namenode. First login to the machine as 'hduser', then go to /usr/local directory. Using the following command:
+                  <blockquote>
+                  swl@HadoopMaster:/usr/local$ sudo su hduser<br>
+                  hduser@HadoopMaster:/usr/local$ cd /usr/local
+                  </blockquote>
+                  Then use the next commands to get the tar ball of the lastest (2.6.4 version) Apache Hadoop Binary, and downloads it to the current folder /usr/local. 
+                  <blockquote>
+                  hduser@HadoopMaster:/usr/local$ sudo wget 'http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.6.4/hadoop-2.6.4.tar.gz'
+                  </blockquote>
+                  Next please run the following commands:
+                  <blockquote>
+                  hduser@HadoopMaster:/usr/local$  sudo tar -xzvf hadoop-2.6.0.tar.gz <br>
+                  hduser@HadoopMaster:/usr/local$  sudo mv hadoop-2.6.4/*  /usr/local/hadoop
+                  </blockquote>
+                  The first command untars the tar ball into a file called ‘hadoop-2.6.4’. The second command moves all the files in the tar from hadoop-2.6.4 directory to 'hadoop' file that was created in the last part (2.8)
+                  Now please type the following commands to edit hadoop-env.sh file.
+                  <blockquote>
+                  hduser@HadoopMaster:/usr/local$ cd /usr/local/hadoop/etc/hadoop <br>
+                  hduser@HadoopMaster:/usr/local/hadoop/etc/hadoop$ sudo nano hadoop-env.sh
+                  </blockquote>
+                  An editable file opens within the CLI (command Line Interface) look in the document for one line to update as follows: 
+                  <blockquote>
+                  JAVA_HOME=/usr/lib/jvm/java-8-oracle
+                  </blockquote>
+                  Then press crtl-x, then y, then enter. You have re-written the file. Then run the following three commands:
+                  <blockquote>
+                  hduser@HadoopMaster:/usr/local/hadoop/etc/hadoop$ sudo mkdir -p /usr/local/hadoop_tmp/ <br>
+                  hduser@HadoopMaster:/usr/local/hadoop/etc/hadoop$ sudo mkdir -p /usr/local/hadoop_tmp/hdfs/namenode<br>
+                  hduser@HadoopMaster:/usr/local/hadoop/etc/hadoop$ sudo chown hduser:hadoop -R /usr/local/hadoop_tmp/<br>
+                  </blockquote>
+                </p>
+
+                <p>
+                  <strong> Step 4 - Only on slave nodes </strong> 
+                  <br>
+                  &ensp; &ensp; &ensp; Please run the following commands on all HadoopSlave Machines. It will create a hadoop_temp file, and assign the file to 'hduser'.
+                  <blockquote>
+                  swl@HadoopSlave1:~$ sudo mkdir -p /usr/local/hadoop_tmp/ <br>
+                  swl@HadoopSlave1:~$ sudo mkdir -p /usr/local/hadoop_tmp/hdfs/datanode <br>
+                  swl@HadoopSlave1:~$ sudo chown hduser:hadoop -R /usr/local/hadoop_tmp/
+                  </blockquote>
+                </p>
+
+                <p>
+                  <strong> Step 5 - Hadoop Configuration </strong> 
+                  <br>
+                  &ensp; &ensp; &ensp; The commands in Step 5 are to be run exclusively on the HadoopMaster only. You will need to configure some of the hadoop files. First run the following commands and edit file
+                  <blockquote>
+                  swl@HadoopMaster:/usr/local$ sudo su hduser<br>
+                  hduser@HadoopMaster:/usr/local$ cd /usr/local/hadoop/etc/hadoop<br>
+                  hduser@HadoopMaster:/usr/local/hadoop/etc/hadoop$ sudo nano core-site.xml
+                  </blockquote>
+                  
+                </p>
+
+              </div>
+              <div class="clear"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="grid">
+          <div class="unit one-third center-on-mobiles">
+            <p> Selam Woldetsadick - 26.07.2016 </p>
+          </div>
+          <div class="unit two-thirds align-right center-on-mobiles">
+            <p>
+              Hosted by
+              <a href="https://github.com">
+                <img src="./images/footer-logo.png" width="100" height="30" alt="GitHub • Social coding">
+              </a>
+            </p>
+          </div>
+        </div>
+      </footer>
+
+    </body>
+  </html>

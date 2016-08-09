@@ -1,0 +1,43 @@
+java -version
+scala -version
+----------------------------------------------------------------------------
+cd Downloads
+wget http://d3kbcqa49mib13.cloudfront.net/spark-1.6.2-bin-hadoop2.6.tgz
+sudo tar zxvf spark-1.6.2-bin-hadoop2.6.tgz
+----------------------------------------------------------------------------
+sudo mkdir /usr/local/spark
+sudo chown hduser:hadoop -R /usr/local/spark
+
+sudo mv spark-1.6.2-bin-hadoop2.6/* /usr/local/spark OR sudo rsync -avxP /usr/local/spark/ hduser@HadoopSlave1:/usr/local/spark/ OR  sudo rsync -avxP /usr/local/spark/ hduser@HadoopSlave2:/usr/local/spark/ OR  sudo rsync -avxP /usr/local/spark/ hduser@HadoopSlave3:/usr/local/spark/ OR  sudo rsync -avxP /usr/local/spark/ hduser@HadoopSlave4:/usr/local/spark/
+-------------------------------------------------------------------------------------
+sudo su hduser
+cd ~
+sudo nano ~/.profile
+export SPARK_HOME=/usr/local/spark
+export PATH=$PATH:$SPARK_HOME/bin
+
+sudo nano .bashrc
+export SPARK_HOME=/usr/local/spark
+export PATH=$PATH:$SPARK_HOME/bin
+----------------------------------------------------------------------------------------
+sudo cp /usr/local/spark/conf/spark-env.sh.template /usr/local/spark/conf/spark-env.sh
+sudo nano /usr/local/spark/conf/spark-env.sh
+
+SPARK_JAVA_OPTS=-Dspark.driver.port=53411
+HADOOP_CONF_DIR=$HADOOP_HOME/conf
+SPARK_MASTER_IP=192.168.178.34
+
+sudo cp /usr/local/spark/conf/spark-defaults.conf.template /usr/local/spark/conf/spark-defaults.conf
+sudo nano /usr/local/spark/conf/spark-defaults.conf
+
+spark.master	spark://192.168.178.34:7077
+spark.serializer	org.apache.spark.serializer.KryoSerializer
+----------------------------------------------------------------------------------------
+sudo cp /usr/local/spark/conf/slaves.template /usr/local/spark/conf/slaves
+sudo nano /usr/local/spark/conf/slaves
+
+HadoopMaster
+HadoopSlave1
+HadoopSlave2
+HadoopSlave3
+HadoopSlave4
